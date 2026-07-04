@@ -1,0 +1,161 @@
+/* ==========================================================
+   Panamericana Media — custom overrides on top of main.css
+   Keeps the Video Colorado template system intact; only adds
+   what's specific to using an image logo instead of a text
+   wordmark, plus a couple of small layout tweaks.
+   ========================================================== */
+
+/* Navbar logo image sizing (PM uses a real logo file, not a text wordmark) */
+.navbar .logo-container {
+    width: 14%;
+    min-width: 150px;
+}
+
+.navbar .logo-container img {
+    width: 100%;
+    max-width: 190px;
+    height: auto;
+}
+
+.sidebar-header .sidebar-logo-img {
+    max-width: 150px;
+    height: auto;
+}
+
+@media (max-width: 991px) {
+    .navbar .logo-container {
+        width: auto;
+        min-width: 130px;
+    }
+}
+
+/* Custom list style used on the homepage Story/Strategy cards */
+.custom-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.custom-list li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--text-color);
+}
+
+.custom-list li::before {
+    content: "\f111";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 6px;
+    color: var(--accent-color);
+    position: absolute;
+    left: 0;
+    top: 6px;
+}
+
+/* Case study phase blocks (used on Our Work page) */
+.case-study-phase {
+    border-left: 2px solid var(--accent-color);
+    padding-left: 24px;
+    margin-bottom: 24px;
+}
+
+.case-study-phase h5 {
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.case-study-tag {
+    display: inline-block;
+    background: var(--accent-color-3);
+    color: var(--accent-color-7);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px;
+    margin: 4px 6px 4px 0;
+}
+
+.case-study-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.case-study-status {
+    display: inline-block;
+    background: var(--accent-color);
+    color: var(--secondary);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Client logo grid (Clients page) */
+.client-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+.client-logo-card {
+    background: var(--accent-color-5);
+    border-radius: 12px;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    min-height: 140px;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.client-logo-card:hover {
+    transform: translateY(-4px);
+    background: var(--accent-color-3);
+}
+
+.client-logo-card span {
+    font-family: var(--font-family-1);
+    font-size: 15px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.client-sector-label {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+/* Studio model collaborator chips on About page */
+.collaborator-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.collaborator-chip {
+    background: var(--accent-color-5);
+    border: 1px solid var(--accent-color-3);
+    border-radius: 100px;
+    padding: 10px 20px;
+    color: var(--accent-color-7);
+    font-size: 14px;
+}
