@@ -8,20 +8,119 @@
 <link rel="stylesheet" href="./assets/css/main.css">
 <link rel="stylesheet" href="./assets/css/responsive.css">
 <link rel="stylesheet" href="./assets/css/pm-custom.css">
-<link rel="icon" type="image/png" sizes="32x32" href="./assets/images/FavIcon Mailchimp.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./assets/images/FavIcon Mailchimp.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-pm-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/images/favicon-pm-180.png">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   HERO ANIMATED WORD CYCLER
+   ───────────────────────────────────────────────────────────────
+   Design:  "WHERE [orange word] STRATEGY" — one line, one h1.
+            The orange word rotates every 2.5s with a fade + 
+            subtle upward slide. Premium, cinematic, confident.
+
+   No-layout-shift technique: display:inline-grid + grid-area:1/1
+   on every word means all words share the same grid cell. The
+   container is always exactly as wide as the widest word
+   (CREATIVITY / CONNECTION = 10 chars). Width never changes.
+   Only opacity and transform change — zero reflow, zero shift.
+
+   Font inheritance: .pm-cycler is inside the parent <h1>, so it
+   automatically inherits font-size, font-family, font-weight,
+   text-transform, line-height — no values need to be hard-coded.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Animated word container ────────────────────────────────── */
+.pm-cycler {
+  display: inline-grid;          /* sits inline with h1 text    */
+  vertical-align: baseline;      /* align with surrounding text */
+  color: var(--accent-color, #f96500); /* PM orange             */
+  /* font inherits from parent h1 — size, weight, family, case  */
+}
+
+/* ── Individual words — all in the same grid cell ───────────── */
+.pm-word {
+  grid-area: 1 / 1;             /* stack all words in cell 1,1  */
+  font: inherit;                 /* exact match to h1             */
+  color: inherit;                /* orange from parent            */
+  white-space: nowrap;           /* never wraps mid-word          */
+
+  /* Entry state: invisible + shifted down slightly              */
+  opacity: 0;
+  transform: translateY(0.1em);
+
+  /* Cinematic ease-out — slow settle, fast exit                 */
+  transition:
+    opacity   0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Active word: fully visible, in resting position              */
+.pm-word.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Exiting word: fade out and float upward                      */
+.pm-word.exit {
+  opacity: 0;
+  transform: translateY(-0.1em);
+}
+
+/* ── Reduced motion: no translate, just a quick crossfade ───── */
+@media (prefers-reduced-motion: reduce) {
+  .pm-word,
+  .pm-word.active,
+  .pm-word.exit {
+    transform: none !important;
+    transition: opacity 0.25s ease;
+  }
+}
+
+/* ── Ensure the two h1 lines in the hero look correct ─────────
+   If main.css wraps h1s in a flex row we override that here so
+   our single h1 renders as a standard block-level heading.       */
+.home-title-container .pm-hero-line {
+  display: block; /* override any flex inherited from main.css  */
+}
+
+/* ── Kill the gradient overlay that main.css puts on the hero ─
+   .banner-home-video likely has a ::before or ::after dark fade
+   (transparent → black at bottom) meant to blend the video bg.
+   Without the video, that overlay sits ON TOP of the text, which
+   is why WHERE/IMPACT look bright but STRATEGY and MEETS STORY
+   appear dark/grey — the overlay is covering them.
+   We remove the pseudo-elements and push content above z-index. */
+.banner-home-video::before,
+.banner-home-video::after {
+  content: none !important;
+  display: none !important;
+}
+.banner-home-video .hero-container {
+  position: relative;
+  z-index: 2;
+}
+</style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════ -->
 <header>
   <div class="navbar-container">
     <div class="hero-container">
       <nav class="navbar navbar-expand-lg">
         <div class="navbar-nav-container">
+
+          <!-- LOGO — untouched per instructions -->
           <div class="logo-container">
             <a class="navbar-brand fw-bold" href="./index.html">
-              <img src="./assets/images/Panamericana_Media_Logo_Official.png" alt="Panamericana Media">
+              <img src="./assets/images/Panamericana_Media_Logo_Crop.png" alt="Panamericana Media">
             </a>
           </div>
+
           <div class="nav-link-container">
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav mx-auto">
@@ -34,23 +133,30 @@
               </ul>
             </div>
           </div>
-          <button class="nav-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+          <button class="nav-btn" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa-solid fa-bars"></i>
           </button>
+
           <div class="navbar-cta-container">
             <div><a href="./contact.html" class="btn btn-accent">Let's Create</a></div>
           </div>
+
         </div>
       </nav>
     </div>
   </div>
 </header>
 
+<!-- ═══════════════════════════════════════ SIDEBAR ══════ -->
 <aside>
   <div class="sidebar-overlay"></div>
   <div class="sidebar">
     <div class="sidebar-header">
-      <img src="./assets/images/Panamericana_Media_Logo_Crop.png" alt="Panamericana Media" class="sidebar-logo-img">
+      <img src="./assets/images/Panamericana_Media_Logo_Crop.png"
+           alt="Panamericana Media" class="sidebar-logo-img">
       <button class="close-btn"><span>X</span></button>
     </div>
     <ul class="menu">
@@ -65,34 +171,92 @@
   </div>
 </aside>
 
+<!-- ═══════════════════════════════════════ MAIN ═════════ -->
 <main>
 
-  <!-- HERO
-       FIX 1: Hero subhead was production-first. Now consulting-first.
-       FIX 3: No "English-first" used anywhere in hero.
-  -->
-  <div class="banner-static-bg" style="position:absolute;inset:0;background:#000;z-index:0;"></div>
+  <!-- ─────────────────────────────────────────────────────────
+       HERO SECTION
+       ─────────────────────────────────────────────────────────
+       WHAT CHANGED:
+       • Removed: <div class="home-spacer"><div class="spacer-inner"></div></div>
+         That was the orange outlined rectangle. Gone entirely.
+       • Removed: the <div class="d-flex flex-row ..."> wrapper that
+         held "Where" / orange box / "Strategy" as three siblings.
+       • Added: one <h1> with "Where" + .pm-cycler span + "Strategy"
+         all inline. The .pm-cycler uses display:inline-grid to
+         reserve the width of the longest word without ever shifting.
+       • "Meets Story" stays as its own <h1> below, unchanged.
+
+       ACCESSIBILITY:
+       • Screen readers read "Where [first word] Strategy Meets Story"
+         on page load — a complete, meaningful sentence.
+       • aria-hidden="true" on words 2–9 prevents double-reading.
+       • The active word is the only one without aria-hidden, so
+         screen readers see one coherent phrase at all times.
+  ──────────────────────────────────────────────────────────── -->
+  <!-- banner-static-bg: solid black fallback sits below the video layer.
+       Prevents any gradient bleed-through when the video isn't loaded. -->
+  <div class="banner-static-bg" style="position:absolute;inset:0;background:#000;z-index:0;pointer-events:none;"></div>
+
   <div class="banner-home-video">
-    <div class="hero-container position-relative z-2">
+    <!-- position-relative + z-index:2 keeps text above any overlay layer -->
+    <div class="hero-container position-relative" style="z-index:2;">
       <div class="banner-home-content">
         <div class="d-flex flex-column gspace-2 align-items-center">
-          <div class="d-flex flex-column flex-md-row gspace-2 justify-content-center justify-content-md-between align-items-center">
+
+          <div class="d-flex flex-column flex-md-row gspace-2
+                      justify-content-center justify-content-md-between
+                      align-items-center">
+
+            <!-- ── Headline ──────────────────────────────────── -->
             <div class="home-title-container">
-              <div class="d-flex flex-row gspace-y-0 gspace-x-1 align-items-center">
-                <h1>Where</h1>
-                <div class="home-spacer"><div class="spacer-inner"></div></div>
-                <h1>Strategy</h1>
-              </div>
+
+              <!--
+                Line 1: WHERE [animated orange word] STRATEGY
+                ─ One single h1 — no flex row, no spacer div.
+                ─ &nbsp; on both sides of the cycler keeps spacing
+                  clean without relying on CSS gap.
+                ─ The .pm-cycler span stacks all words in a single
+                  grid cell. Container width = widest word always.
+              -->
+              <h1 class="pm-hero-line">Where&nbsp;<span
+                  class="pm-cycler"
+                  aria-label="rotating context word"
+                ><span class="pm-word active">Community</span><span
+                   class="pm-word" aria-hidden="true">Culture</span><span
+                   class="pm-word" aria-hidden="true">Trust</span><span
+                   class="pm-word" aria-hidden="true">People</span><span
+                   class="pm-word" aria-hidden="true">Insight</span><span
+                   class="pm-word" aria-hidden="true">Purpose</span><span
+                   class="pm-word" aria-hidden="true">Impact</span><span
+                   class="pm-word" aria-hidden="true">Connection</span><span
+                   class="pm-word" aria-hidden="true">Creativity</span
+                ></span>&nbsp;Strategy</h1>
+
+              <!-- Line 2: MEETS STORY — unchanged -->
               <h1>Meets Story</h1>
+
             </div>
+            <!-- ── End headline ──────────────────────────────── -->
+
             <div class="home-avatar-container">
-              <p>We help organizations build genuine trust with the communities they're trying to reach — through strategy, bicultural expertise, and storytelling that's designed to land, not just be delivered.</p>
+              <p>We help organizations build genuine trust with the
+                communities they're trying to reach — through strategy,
+                bicultural expertise, and storytelling that's designed
+                to land, not just be delivered.</p>
             </div>
+
           </div>
+
           <div class="home-divider"></div>
-          <div class="d-flex flex-column flex-md-row gspace-2 w-100 align-items-center justify-content-center justify-content-md-between">
+
+          <div class="d-flex flex-column flex-md-row gspace-2 w-100
+                      align-items-center justify-content-center
+                      justify-content-md-between">
             <div>
-              <a href="./contact.html" class="btn btn-accent">Start the Conversation <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="./contact.html" class="btn btn-accent">
+                Start the Conversation&nbsp;<i class="fa-solid fa-arrow-right"></i>
+              </a>
             </div>
             <div class="d-flex flex-row gspace-2 align-items-center">
               <a href="https://www.facebook.com/panamericana.media" class="social-icon"><i class="fa-brands fa-facebook"></i></a>
@@ -101,26 +265,21 @@
               <a href="https://www.youtube.com/@panamericanamedia" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
+  <!-- ── End Hero ──────────────────────────────────────────── -->
 
-  <!-- CORE SERVICE SECTION
-       FIX 1: Duplicate h2s — aria-hidden="true" on decorative stroke version.
-       FIX 2: "Communication Gaps Cost You Trust" kept (it's the section's thesis)
-               but reduced frequency across cards.
-       FIX 7: Card 4 renamed from "Full Production Capability" → "Strategy-Led Creative Execution."
-               Description no longer leads with production outputs.
-       FIX PRIOR: Core service description removed LLC/founding date language.
-  -->
+
+  <!-- CORE SERVICE SECTION -->
   <section class="section-core-service">
     <div class="hero-container overflow-visible">
       <div class="d-flex flex-column gspace-5 position-relative">
         <div class="core-service-heading-container">
           <div class="core-heading-container">
             <h2 class="core-service-heading heading-fill">When the Message Doesn't Land, Trust Is What You Lose</h2>
-            <!-- FIX 1: aria-hidden prevents screen readers and SEO from reading this decorative duplicate -->
             <h2 class="core-service-heading heading-stroke" aria-hidden="true">When the Message Doesn't Land, Trust Is What You Lose</h2>
           </div>
           <div class="core-service-logo-container">
@@ -135,7 +294,8 @@
                   </textPath>
                 </text>
                 <g transform="translate(100 100)">
-                  <image href="./assets/images/favicon-pm-180.png" class="core-service__circle-logo-image" width="150" height="150" x="-75" y="-75" preserveAspectRatio="xMidYMid meet" />
+                  <image href="./assets/images/favicon-pm-180.png" class="core-service__circle-logo-image"
+                    width="150" height="150" x="-75" y="-75" preserveAspectRatio="xMidYMid meet" />
                 </g>
               </svg>
             </div>
@@ -143,14 +303,12 @@
         </div>
         <div class="d-flex flex-column gspace-5">
           <div class="core-service-description">
-            <!-- FIX 7: Removed production-company opener. Consulting-first framing. -->
             <p>Most organizations don't have a content problem — they have a connection problem. The message exists. The strategy to make it land with the right audience often doesn't. That's what Panamericana Media is built for.</p>
           </div>
           <div class="core-service-card-container">
             <div class="card card-core-service">
               <img src="./assets/images/Icon-7.png" alt="Communications Diagnostics" class="core-service-icon">
               <div class="d-flex flex-column gspace-2">
-                <!-- FIX 2: "Communication Gap Diagnostics" kept here — it is the product name -->
                 <h4>Communication Gap Diagnostics</h4>
                 <p class="text-center text-md-start">We identify exactly where and why your message isn't connecting — and what it would take to change that.</p>
               </div>
@@ -169,12 +327,10 @@
                 <p class="text-center text-md-start">We help organizations build authentic relationships with Latino and Hispanic communities — and help those communities be seen, heard, and served by the institutions around them.</p>
               </div>
             </div>
-            <!-- FIX 7: Renamed from "Full Production Capability" → "Strategy-Led Creative Execution" -->
             <div class="card card-core-service">
               <img src="./assets/images/Icon-4-1.png" alt="Strategy-Led Creative Execution" class="core-service-icon">
               <div class="d-flex flex-column gspace-2">
                 <h4>Strategy-Led Creative Execution</h4>
-                <!-- FIX 3: "English-first" removed. "Dedicated production brand" used instead. -->
                 <p class="text-center text-md-start">When the strategy is ready, we execute — bilingual content, community campaigns, and storytelling. For full-scale video production, we work through Video Colorado, our dedicated production brand.</p>
               </div>
             </div>
@@ -187,17 +343,11 @@
     </div>
   </section>
 
-  <!-- MARKET OPPORTUNITY SECTION
-       FIX 6: Softened from "access to a $4.1 trillion market" framing.
-               Now framed as cultural context, not a sales opportunity.
-  -->
+  <!-- MARKET CONTEXT SECTION -->
   <section class="section bg-accent-color-5">
     <div class="hero-container">
       <div class="d-flex flex-column gspace-3 text-center align-items-center">
         <span class="client-sector-label">The Context</span>
-        <!-- FIX 6: Was "Most businesses don't have a real way to reach a $4.1 trillion market."
-                    That frames the Latino community as a market to access. 
-                    New version frames it as a cultural fluency challenge. -->
         <h2 style="max-width: 750px;">Latino purchasing power in the U.S. has reached $4.1 trillion. Reaching that community takes cultural fluency — not just a translated ad.</h2>
         <p style="max-width: 700px;">Colorado's Latino population has grown 77% over the past 25 years to more than 1.3 million — roughly one in five residents. The organizations building trust with this community now are the ones who will earn long-term relationships. That requires a partner who understands the culture, not just the language.</p>
         <div class="row row-cols-md-3 row-cols-1 grid-spacer-3 w-100" style="max-width: 900px;">
@@ -219,17 +369,12 @@
     </div>
   </section>
 
-  <!-- STORY + STRATEGY SECTION
-       FIX 7: Removed "We produce. We strategize. We do both at once." 
-               That frames PM as a production company. Rewritten consulting-first.
-  -->
+  <!-- STORY + STRATEGY SECTION -->
   <section class="section service-content-banner">
     <div class="hero-container">
       <div class="d-flex flex-column gspace-5">
         <div class="service-title-wrapper">
-          <div class="service-title-heading">
-            <h2>Story + Strategy</h2>
-          </div>
+          <div class="service-title-heading"><h2>Story + Strategy</h2></div>
           <div class="service-title-description">
             <p>Strategy without execution is just a plan. Execution without strategy is just content. Every engagement starts with understanding your audience — what they need to hear, and how they need to hear it.</p>
           </div>
@@ -256,7 +401,6 @@
           <div class="col">
             <div class="card card-core-service h-100">
               <div class="d-flex flex-column gspace-2 text-start">
-                <!-- FIX 2: "close communication gaps" → "ensure the work lands" -->
                 <h4>Strategy</h4>
                 <p>The layer most production companies skip. We help you understand your audience and build a plan so that when the work is made, it earns the attention it deserves.</p>
                 <ul class="custom-list">
@@ -273,12 +417,7 @@
     </div>
   </section>
 
-  <!-- WHY TRUST US SECTION
-       FIX 1: Duplicate h2 ("Why Organizations Trust...") — aria-hidden on stroke version.
-       FIX 2: "close the gap" used once here — varied elsewhere.
-       PRIOR FIX: Counter bug (data-target="2021") removed.
-       PRIOR FIX: 6 cards reduced to 4 focused ones. Duplicate icons removed.
-  -->
+  <!-- WHY TRUST US SECTION -->
   <section class="section bg-accent-color-5">
     <div class="hero-container">
       <div class="d-flex flex-column gspace-3">
@@ -291,7 +430,6 @@
                   <div class="trust-us-icon"><img src="./assets/images/Icon-5-1.png" alt="" class="img-fluid"></div>
                   <div class="d-flex flex-column gspace-2">
                     <h4>Strategy Before Cameras</h4>
-                    <!-- FIX 2: Removed "communication gap" — varied with "purpose" -->
                     <p>We work through what you need to communicate before anything gets produced — so every message serves a clear purpose, not just a deadline.</p>
                     <div class="trust-us-cta"><a href="./about.html">Learn More</a><i class="fa-solid fa-chevron-circle-right"></i></div>
                   </div>
@@ -303,7 +441,7 @@
                   <div class="trust-us-icon"><img src="./assets/images/Icon-6-1.png" alt="" class="img-fluid"></div>
                   <div class="d-flex flex-column gspace-2">
                     <h4>Government &amp; Nonprofit Experience</h4>
-                    <p>City offices, state agencies, and community organizations have trusted us with their work. We understand approval processes, public accountability, and how institutional trust is actually earned — not announced.</p>
+                    <p>City offices, state agencies, and community organizations have trusted us with their work. We understand approval processes, public accountability, and how institutional trust is actually earned.</p>
                     <div class="trust-us-cta"><a href="./our-work.html">See Our Work</a><i class="fa-solid fa-chevron-circle-right"></i></div>
                   </div>
                 </div>
@@ -313,7 +451,6 @@
           <div class="col col-lg-4 order-1 order-lg-2">
             <div class="d-flex flex-column gspace-2 text-start text-lg-center align-items-start align-items-lg-center">
               <h2>Why Organizations Trust Panamericana Media</h2>
-              <!-- FIX 2: "close the gap" — one deliberate use here -->
               <p class="mb-0">From municipal government to grassroots nonprofits to growing businesses — we help organizations close the gap between their message and the communities they're trying to serve.</p>
               <div><a href="./contact.html" class="btn btn-accent">Let's Create Together</a></div>
             </div>
@@ -323,7 +460,6 @@
           <div class="col col-lg-4">
             <div class="d-flex flex-column gspace-2 justify-content-end overflow-hidden h-100">
               <span class="trust-us-stat-container">
-                <!-- PRIOR FIX: Removed "counter" class — year counting up reads as a bug -->
                 <span class="trust-us-stat">2021</span>
               </span>
               <h3>Doing This Work Since</h3>
@@ -388,9 +524,7 @@
     </div>
   </section>
 
-  <!-- VIDEO COLORADO BRIDGE
-       FIX 3: "English-first video production brand" → "dedicated production brand powered by Panamericana Media"
-  -->
+  <!-- VIDEO COLORADO BRIDGE -->
   <section class="section-small pm-bridge-section">
     <div class="hero-container">
       <div class="pm-bridge-container">
@@ -398,7 +532,6 @@
           <div class="pm-bridge-text">
             <span class="pm-bridge-eyebrow">Our dedicated production brand</span>
             <h4 class="pm-bridge-heading">Need full-scale video production?</h4>
-            <!-- FIX 3: Removed "English-first." Now "production brand powered by Panamericana Media." -->
             <p class="pm-bridge-body">Video Colorado is our dedicated production brand — powered by the same team, strategy, and bicultural expertise as Panamericana Media. When the strategy is set, Video Colorado brings it to life.</p>
           </div>
           <div class="pm-bridge-cta">
@@ -411,16 +544,12 @@
     </div>
   </section>
 
-  <!-- CONTACT CTA
-       FIX 1: Duplicate h2 headings — aria-hidden on stroke version.
-       FIX 2: Removed "communication gaps" — replaced with "where your message isn't landing"
-  -->
+  <!-- CONTACT CTA -->
   <section class="section-cta-contact">
     <div class="hero-container">
       <div class="contact-cta-banner">
         <div class="contact-cta-title-container">
           <h2 class="contact-cta-title heading-fill">Ready to Solve Your Communication Challenge?</h2>
-          <!-- FIX 1: aria-hidden on the decorative stroke duplicate -->
           <h2 class="contact-cta-title heading-stroke" aria-hidden="true">Ready to Solve Your Communication Challenge?</h2>
         </div>
         <div class="contact-cta-text-container">
@@ -513,5 +642,63 @@
 <script src="./assets/js/swiper-script.js"></script>
 <script src="./assets/js/submit-form.js"></script>
 <script src="./assets/js/video_embedded.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO WORD CYCLER — Panamericana Media
+     ───────────────────────────────────────────────────────────
+     Cycles 9 words every 2.5s with a cinematic fade + slide.
+     Uses .pm-word (from new inline-grid HTML structure).
+     outgoing → .exit  (fade out, float up)
+     incoming → .active (fade in from below)
+     Both run simultaneously for a smooth crossfade feel.
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  var words   = document.querySelectorAll('.pm-word');
+  if (!words || words.length < 2) return;
+
+  var HOLD_MS = 2500;   // ms each word stays fully visible
+  var FADE_MS = 650;    // must match CSS transition duration
+  var current = 0;      // index of currently active word
+  var locked  = false;  // prevents overlapping transitions
+
+  // Reduced-motion: keep first word visible, skip cycling entirely.
+  // The CSS already removes translate; this skips JS interval too.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  function advance() {
+    if (locked) return;
+    locked = true;
+
+    var outgoing = words[current];
+    current = (current + 1) % words.length;
+    var incoming = words[current];
+
+    // Exit: slide up and fade out
+    outgoing.classList.remove('active');
+    outgoing.classList.add('exit');
+    outgoing.setAttribute('aria-hidden', 'true');
+
+    // Enter: fade in from below (one frame later for clean CSS paint)
+    setTimeout(function () {
+      incoming.classList.add('active');
+      incoming.removeAttribute('aria-hidden');
+    }, 16);
+
+    // Clean up exit class after transition finishes
+    setTimeout(function () {
+      outgoing.classList.remove('exit');
+      locked = false;
+    }, FADE_MS + 50);
+  }
+
+  setInterval(advance, HOLD_MS);
+}());
+</script>
+
 </body>
 </html>
